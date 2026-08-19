@@ -209,27 +209,62 @@ export default function ExamRunner({ exam }: { exam: Exam }) {
   const isChecked = mode === "practice" && !!checked[question.id];
   const isLast = currentIndex === questions.length - 1;
 
+  const answeredCount = questions.filter((q) => answers[q.id]).length;
+  const showDots = questions.length <= 30;
+
   return (
     <div className="flex flex-col gap-5 max-w-2xl">
-      <div className="flex items-center justify-between text-sm text-black/50 dark:text-white/50">
-        <div className="flex gap-1.5">
-          {questions.map((q, i) => (
-            <button
-              key={q.id}
-              onClick={() => setCurrentIndex(i)}
-              className={`h-2 w-6 rounded-full transition-colors ${
-                i === currentIndex
-                  ? "bg-indigo-600"
-                  : answers[q.id]
-                    ? "bg-indigo-300 dark:bg-indigo-500/50"
-                    : "bg-black/10 dark:bg-white/15"
-              }`}
-              aria-label={`Go to question ${i + 1}`}
-            />
-          ))}
-        </div>
+      <div className="flex items-center justify-between gap-4 text-sm text-black/50 dark:text-white/50">
+        {showDots ? (
+          <div className="flex flex-wrap gap-1.5">
+            {questions.map((q, i) => (
+              <button
+                key={q.id}
+                onClick={() => setCurrentIndex(i)}
+                className={`h-2 w-6 rounded-full transition-colors ${
+                  i === currentIndex
+                    ? "bg-indigo-600"
+                    : answers[q.id]
+                      ? "bg-indigo-300 dark:bg-indigo-500/50"
+                      : "bg-black/10 dark:bg-white/15"
+                }`}
+                aria-label={`Go to question ${i + 1}`}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex-1">
+            <div className="h-2 rounded-full bg-black/10 dark:bg-white/15 overflow-hidden">
+              <div
+                className="h-full bg-indigo-600 transition-all"
+                style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
+              />
+            </div>
+            <div className="mt-1.5 flex items-center justify-between text-xs">
+              <span>
+                {answeredCount} of {questions.length} answered
+              </span>
+              <label className="flex items-center gap-1.5">
+                Jump to
+                <input
+                  type="number"
+                  min={1}
+                  max={questions.length}
+                  value={currentIndex + 1}
+                  onChange={(e) => {
+                    const n = Number(e.target.value);
+                    if (n >= 1 && n <= questions.length) {
+                      setCurrentIndex(n - 1);
+                    }
+                  }}
+                  className="w-14 rounded border border-black/15 dark:border-white/20 bg-transparent px-1.5 py-0.5 text-center"
+                />
+              </label>
+            </div>
+          </div>
+        )}
         {mode === "exam" && (
-          <span className="font-mono tabular-nums">{formatTime(secondsLeft)}</span>
+          <span className="font-mono tabular-nums shrink-0">{formatTime(secondsLeft)}</span>
         )}
       </div>
 

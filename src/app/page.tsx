@@ -42,8 +42,8 @@ export default function Home() {
       </div>
 
       <p className="mt-12 text-xs text-black/40 dark:text-white/40">
-        Not affiliated with or endorsed by Microsoft. Practice questions are
-        for study purposes and are not real exam questions.
+        Not affiliated with or endorsed by Microsoft. For personal study use
+        only — not for redistribution.
       </p>
     </main>
   );

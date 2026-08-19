@@ -35,9 +35,18 @@ grading, and an optional `topic` used for the results breakdown.
 
 ## Content status
 
-The seed exams currently ship with a small starter set of questions
-(enough to exercise every feature) — expand each exam's data file with
-a full question bank before relying on this for serious exam prep.
+- **Azure AI App and Agent Developer Associate (AI-103)**: 178 questions,
+  converted from a community exam-question archive (ExamTopics) and
+  re-explained against real Azure/Microsoft Foundry product behavior.
+  HOTSPOT and drag-and-drop source questions were converted into this
+  app's single/multi-select format, which sometimes splits one source
+  question into several entries (ids like `ai103-6-a`, `ai103-6-b`).
+  **Note:** this content is sourced from leaked/community exam dumps,
+  which typically violates the Microsoft certification agreement's
+  content-sharing terms — keep this private and don't redistribute it.
+- **Azure Fundamentals (AZ-900)**: a small starter set (6 questions),
+  enough to exercise every feature — expand before relying on it for
+  real exam prep.
 
 ## Tech stack
 
@@ -47,5 +56,4 @@ history persisted to `localStorage`.
 
 ---
 
-Not affiliated with or endorsed by Microsoft. Practice questions are
-for study purposes and are not real exam questions.
+Not affiliated with or endorsed by Microsoft. For personal study use only.
