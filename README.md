@@ -1,8 +1,8 @@
 # Azure Certification Practice
 
-A practice quiz app for Azure certification exams — starting with the
-**Azure AI App and Agent Developer Associate** exam, with **Azure
-Fundamentals (AZ-900)** included to prove out multi-exam support.
+A practice quiz app for Azure certification exams: **Azure AI App and
+Agent Developer Associate (AI-103)**, **Azure Administrator Associate
+(AZ-104)**, and a starter set for **Azure Fundamentals (AZ-900)**.
 
 ## Features
 
@@ -44,6 +44,14 @@ grading, and an optional `topic` used for the results breakdown.
   **Note:** this content is sourced from leaked/community exam dumps,
   which typically violates the Microsoft certification agreement's
   content-sharing terms — keep this private and don't redistribute it.
+- **Azure Administrator Associate (AZ-104)**: 299 questions, same
+  treatment as AI-103 above (also from ExamTopics, same content-sharing
+  caveat applies). The source's full bank has 606 questions; roughly
+  half are excluded here because they were unanswerable as extracted —
+  213 HOTSPOT/drag-and-drop questions whose answer key only ever existed
+  as an image not present in this source, plus 93 more whose prompt
+  depends on a table/exhibit the source export dropped entirely. Both
+  were left out rather than guessed at.
 - **Azure Fundamentals (AZ-900)**: a small starter set (6 questions),
   enough to exercise every feature — expand before relying on it for
   real exam prep.
