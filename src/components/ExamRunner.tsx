@@ -1,8 +1,17 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
+import {
+  Check,
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Flag,
+  PencilLine,
+  Play,
+  Timer,
+} from "lucide-react";
 import type { Exam, Question } from "@/lib/exams/types";
 import { shuffle } from "@/lib/shuffle";
 import { saveAttempt } from "@/lib/storage";
@@ -116,34 +125,40 @@ export default function ExamRunner({ exam }: { exam: Exam }) {
 
   if (stage === "setup") {
     return (
-      <div className="rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-white/5 p-8 shadow-sm max-w-xl">
+      <div className="rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-white/5 p-8 shadow-sm max-w-xl animate-card-enter">
         <h2 className="text-lg font-semibold mb-6">Configure your session</h2>
 
         <div className="mb-6">
           <p className="text-sm font-medium mb-2">Mode</p>
-          <div className="flex gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             <button
               onClick={() => setMode("practice")}
-              className={`flex-1 rounded-lg border px-4 py-3 text-sm text-left transition-colors ${
+              className={`flex-1 rounded-lg border px-4 py-3 text-sm text-left transition-[colors,transform] active:scale-[0.98] ${
                 mode === "practice"
-                  ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
+                  ? "border-accent bg-accent-soft dark:bg-accent/10"
                   : "border-black/10 dark:border-white/15 hover:border-black/30"
               }`}
             >
-              <span className="block font-medium">Practice</span>
+              <span className="flex items-center gap-2 font-medium">
+                <PencilLine size={16} strokeWidth={2} className="text-accent" />
+                Practice
+              </span>
               <span className="block text-black/50 dark:text-white/50 text-xs mt-0.5">
                 Instant feedback + explanations, no timer
               </span>
             </button>
             <button
               onClick={() => setMode("exam")}
-              className={`flex-1 rounded-lg border px-4 py-3 text-sm text-left transition-colors ${
+              className={`flex-1 rounded-lg border px-4 py-3 text-sm text-left transition-[colors,transform] active:scale-[0.98] ${
                 mode === "exam"
-                  ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
+                  ? "border-accent bg-accent-soft dark:bg-accent/10"
                   : "border-black/10 dark:border-white/15 hover:border-black/30"
               }`}
             >
-              <span className="block font-medium">Exam simulation</span>
+              <span className="flex items-center gap-2 font-medium">
+                <Timer size={16} strokeWidth={2} className="text-accent" />
+                Exam simulation
+              </span>
               <span className="block text-black/50 dark:text-white/50 text-xs mt-0.5">
                 Timed, feedback only at the end
               </span>
@@ -158,9 +173,9 @@ export default function ExamRunner({ exam }: { exam: Exam }) {
               <button
                 key={n}
                 onClick={() => setCount(n)}
-                className={`rounded-lg border px-3 py-1.5 text-sm transition-colors ${
+                className={`rounded-lg border px-3 py-2 text-sm transition-[colors,transform] active:scale-[0.97] ${
                   count === n
-                    ? "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10"
+                    ? "border-accent bg-accent-soft dark:bg-accent/10"
                     : "border-black/10 dark:border-white/15 hover:border-black/30"
                 }`}
               >
@@ -172,16 +187,11 @@ export default function ExamRunner({ exam }: { exam: Exam }) {
 
         <button
           onClick={start}
-          className="w-full rounded-lg bg-indigo-600 px-4 py-3 text-sm font-medium text-white hover:bg-indigo-500 transition-colors"
+          className="flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-4 py-3 text-sm font-medium text-white transition-[colors,transform] hover:bg-accent/90 active:scale-[0.98]"
         >
+          <Play size={16} strokeWidth={2} />
           Start
         </button>
-        <Link
-          href="/"
-          className="block text-center text-sm text-black/50 dark:text-white/50 hover:underline mt-4"
-        >
-          Back to exams
-        </Link>
       </div>
     );
   }
@@ -214,29 +224,33 @@ export default function ExamRunner({ exam }: { exam: Exam }) {
 
   return (
     <div className="flex flex-col gap-5 max-w-2xl">
-      <div className="flex items-center justify-between gap-4 text-sm text-black/50 dark:text-white/50">
+      <div className="flex flex-col gap-2 text-sm text-black/50 dark:text-white/50 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
         {showDots ? (
           <div className="flex flex-wrap gap-1.5">
             {questions.map((q, i) => (
               <button
                 key={q.id}
                 onClick={() => setCurrentIndex(i)}
-                className={`h-2 w-6 rounded-full transition-colors ${
-                  i === currentIndex
-                    ? "bg-indigo-600"
-                    : answers[q.id]
-                      ? "bg-indigo-300 dark:bg-indigo-500/50"
-                      : "bg-black/10 dark:bg-white/15"
-                }`}
+                className="-m-1.5 p-1.5 transition-transform active:scale-90"
                 aria-label={`Go to question ${i + 1}`}
-              />
+              >
+                <span
+                  className={`block h-2 w-6 rounded-full transition-colors ${
+                    i === currentIndex
+                      ? "bg-accent"
+                      : answers[q.id]
+                        ? "bg-accent/40"
+                        : "bg-black/10 dark:bg-white/15"
+                  }`}
+                />
+              </button>
             ))}
           </div>
         ) : (
           <div className="flex-1">
             <div className="h-2 rounded-full bg-black/10 dark:bg-white/15 overflow-hidden">
               <div
-                className="h-full bg-indigo-600 transition-all"
+                className="h-full bg-accent transition-all duration-300 ease-out"
                 style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
               />
             </div>
@@ -248,6 +262,8 @@ export default function ExamRunner({ exam }: { exam: Exam }) {
                 Jump to
                 <input
                   type="number"
+                  inputMode="numeric"
+                  pattern="[0-9]*"
                   min={1}
                   max={questions.length}
                   value={currentIndex + 1}
@@ -257,18 +273,22 @@ export default function ExamRunner({ exam }: { exam: Exam }) {
                       setCurrentIndex(n - 1);
                     }
                   }}
-                  className="w-14 rounded border border-black/15 dark:border-white/20 bg-transparent px-1.5 py-0.5 text-center"
+                  className="w-14 rounded border border-black/15 dark:border-white/20 bg-transparent px-1.5 py-1 text-center"
                 />
               </label>
             </div>
           </div>
         )}
         {mode === "exam" && (
-          <span className="font-mono tabular-nums shrink-0">{formatTime(secondsLeft)}</span>
+          <span className="flex items-center gap-1.5 font-mono tabular-nums shrink-0">
+            <Clock size={14} strokeWidth={2} />
+            {formatTime(secondsLeft)}
+          </span>
         )}
       </div>
 
       <QuestionCard
+        key={question.id}
         question={question}
         index={currentIndex}
         total={questions.length}
@@ -281,9 +301,11 @@ export default function ExamRunner({ exam }: { exam: Exam }) {
         <button
           onClick={goPrev}
           disabled={currentIndex === 0}
-          className="rounded-lg border border-black/15 dark:border-white/20 px-4 py-2 text-sm font-medium disabled:opacity-40 hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+          aria-label="Previous question"
+          className="flex items-center gap-1.5 rounded-lg border border-black/15 dark:border-white/20 px-4 py-2.5 text-sm font-medium transition-[colors,transform] disabled:opacity-40 hover:bg-black/5 dark:hover:bg-white/10 active:scale-[0.97]"
         >
-          Previous
+          <ChevronLeft size={16} strokeWidth={2} />
+          <span className="hidden sm:inline">Previous</span>
         </button>
 
         <div className="flex gap-2">
@@ -291,23 +313,27 @@ export default function ExamRunner({ exam }: { exam: Exam }) {
             <button
               onClick={() => checkAnswer(question.id)}
               disabled={selected.length === 0}
-              className="rounded-lg bg-indigo-600 px-4 py-2 text-sm font-medium text-white disabled:opacity-40 hover:bg-indigo-500 transition-colors"
+              className="flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2.5 text-sm font-medium text-white transition-[colors,transform] disabled:opacity-40 hover:bg-accent/90 active:scale-[0.97]"
             >
+              <Check size={16} strokeWidth={2} />
               Check answer
             </button>
           )}
           {!isLast ? (
             <button
               onClick={goNext}
-              className="rounded-lg border border-black/15 dark:border-white/20 px-4 py-2 text-sm font-medium hover:bg-black/5 dark:hover:bg-white/10 transition-colors"
+              aria-label="Next question"
+              className="flex items-center gap-1.5 rounded-lg border border-black/15 dark:border-white/20 px-4 py-2.5 text-sm font-medium transition-[colors,transform] hover:bg-black/5 dark:hover:bg-white/10 active:scale-[0.97]"
             >
-              Next
+              <span className="hidden sm:inline">Next</span>
+              <ChevronRight size={16} strokeWidth={2} />
             </button>
           ) : (
             <button
               onClick={finish}
-              className="rounded-lg bg-emerald-600 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-500 transition-colors"
+              className="flex items-center gap-1.5 rounded-lg bg-emerald-600 px-4 py-2.5 text-sm font-medium text-white transition-[colors,transform] hover:bg-emerald-500 active:scale-[0.97]"
             >
+              <Flag size={16} strokeWidth={2} />
               Finish
             </button>
           )}

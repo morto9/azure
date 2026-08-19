@@ -1,3 +1,4 @@
+import { Check, CheckCircle2, ListChecks, X, XCircle } from "lucide-react";
 import type { Question } from "@/lib/exams/types";
 
 interface QuestionCardProps {
@@ -24,14 +25,15 @@ export default function QuestionCard({
     selected.every((id) => question.correctChoiceIds.includes(id));
 
   return (
-    <div className="rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-white/5 p-6 shadow-sm">
-      <div className="flex items-center justify-between gap-4 mb-3">
+    <div className="animate-card-enter rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-white/5 p-6 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-2 mb-3">
         <span className="text-xs font-medium uppercase tracking-wide text-black/50 dark:text-white/50">
           Question {index + 1} of {total}
           {question.topic ? ` · ${question.topic}` : ""}
         </span>
         {isMulti && (
-          <span className="text-xs rounded-full bg-indigo-100 dark:bg-indigo-500/20 text-indigo-700 dark:text-indigo-300 px-2 py-0.5 font-medium">
+          <span className="flex items-center gap-1 text-xs rounded-full bg-accent-soft dark:bg-accent/20 text-accent px-2 py-0.5 font-medium">
+            <ListChecks size={12} strokeWidth={2} />
             Select all that apply
           </span>
         )}
@@ -43,6 +45,8 @@ export default function QuestionCard({
         {question.choices.map((choice) => {
           const isSelected = selected.includes(choice.id);
           const isCorrectChoice = question.correctChoiceIds.includes(choice.id);
+          const showAsCorrect = revealed && isCorrectChoice;
+          const showAsWrong = revealed && isSelected && !isCorrectChoice;
 
           let stateClasses =
             "border-black/10 dark:border-white/15 hover:border-black/30 dark:hover:border-white/30";
@@ -54,7 +58,7 @@ export default function QuestionCard({
               stateClasses = "border-red-500 bg-red-50 dark:bg-red-500/10";
             }
           } else if (isSelected) {
-            stateClasses = "border-indigo-500 bg-indigo-50 dark:bg-indigo-500/10";
+            stateClasses = "border-accent bg-accent-soft dark:bg-accent/10";
           }
 
           return (
@@ -63,19 +67,27 @@ export default function QuestionCard({
               type="button"
               disabled={revealed}
               onClick={() => onToggle(choice.id)}
-              className={`flex items-start gap-3 rounded-lg border px-4 py-3 text-left text-sm transition-colors disabled:cursor-default ${stateClasses}`}
+              className={`flex items-start gap-3 rounded-lg border px-4 py-3 text-left text-sm transition-[colors,transform] disabled:cursor-default active:scale-[0.99] ${stateClasses}`}
             >
               <span
                 className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center border ${
                   isMulti ? "rounded" : "rounded-full"
                 } ${
-                  isSelected
-                    ? "border-indigo-500 bg-indigo-500"
-                    : "border-black/30 dark:border-white/30"
+                  showAsCorrect
+                    ? "border-emerald-500 bg-emerald-500"
+                    : showAsWrong
+                      ? "border-red-500 bg-red-500"
+                      : isSelected
+                        ? "border-accent bg-accent"
+                        : "border-black/30 dark:border-white/30"
                 }`}
               >
-                {isSelected && (
-                  <span className="h-1.5 w-1.5 rounded-full bg-white" />
+                {showAsCorrect ? (
+                  <Check size={11} strokeWidth={3} className="text-white" />
+                ) : showAsWrong ? (
+                  <X size={11} strokeWidth={3} className="text-white" />
+                ) : (
+                  isSelected && <span className="h-1.5 w-1.5 rounded-full bg-white" />
                 )}
               </span>
               <span>{choice.text}</span>
@@ -92,7 +104,12 @@ export default function QuestionCard({
               : "border-red-500/40 bg-red-50 dark:bg-red-500/10 text-red-800 dark:text-red-300"
           }`}
         >
-          <p className="font-semibold mb-1">
+          <p className="flex items-center gap-1.5 font-semibold mb-1">
+            {isCorrectOverall ? (
+              <CheckCircle2 size={16} strokeWidth={2} />
+            ) : (
+              <XCircle size={16} strokeWidth={2} />
+            )}
             {isCorrectOverall ? "Correct" : "Not quite"}
           </p>
           <p className="text-black/80 dark:text-white/80">{question.explanation}</p>

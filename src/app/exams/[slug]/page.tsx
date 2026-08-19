@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getExam, getExams } from "@/lib/exams";
 import ExamRunner from "@/components/ExamRunner";
@@ -17,14 +16,7 @@ export default async function ExamPage({
   if (!exam) notFound();
 
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 px-6 py-16">
-      <Link
-        href="/"
-        className="text-sm text-black/50 dark:text-white/50 hover:underline mb-6 inline-block"
-      >
-        ← All exams
-      </Link>
-
+    <main className="mx-auto w-full max-w-3xl flex-1 px-6 pt-10 pb-16 sm:pt-16">
       <header className="mb-8">
         <div className="flex items-center gap-3 mb-2">
           <h1 className="text-2xl font-bold tracking-tight">{exam.title}</h1>
