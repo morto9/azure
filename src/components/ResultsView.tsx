@@ -12,6 +12,7 @@ import {
   XCircle,
 } from "lucide-react";
 import type { Question } from "@/lib/exams/types";
+import { ExamImage } from "@/components/QuestionCard";
 
 interface GradedQuestion {
   question: Question;
@@ -141,7 +142,7 @@ export default function ResultsView({
             className="rounded-xl border border-black/10 dark:border-white/15 bg-white dark:bg-white/5 p-6 shadow-sm"
           >
             <div className="flex items-start justify-between gap-4 mb-2">
-              <p className="font-medium">
+              <p className="font-medium whitespace-pre-line">
                 {i + 1}. {g.question.prompt}
               </p>
               <span
@@ -191,6 +192,18 @@ export default function ResultsView({
             <p className="text-sm text-black/70 dark:text-white/70">
               {g.question.explanation}
             </p>
+
+            {g.question.answerImage && (
+              <div className="mt-3">
+                <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-black/50 dark:text-white/50">
+                  Answer key from the source
+                </p>
+                <ExamImage
+                  image={g.question.answerImage}
+                  alt="The exam's answer area with the correct options marked"
+                />
+              </div>
+            )}
           </div>
         ))}
       </div>

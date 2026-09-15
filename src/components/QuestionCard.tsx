@@ -1,5 +1,27 @@
+import Image from "next/image";
 import { Check, CheckCircle2, ListChecks, X, XCircle } from "lucide-react";
-import type { Question } from "@/lib/exams/types";
+import type { Question, QuestionImage } from "@/lib/exams/types";
+
+export function ExamImage({
+  image,
+  alt,
+  className = "",
+}: {
+  image: QuestionImage;
+  alt: string;
+  className?: string;
+}) {
+  return (
+    <Image
+      src={image.src}
+      width={image.width}
+      height={image.height}
+      alt={alt}
+      sizes="(max-width: 768px) 100vw, 640px"
+      className={`h-auto w-full rounded-lg border border-black/10 dark:border-white/15 bg-white ${className}`}
+    />
+  );
+}
 
 interface QuestionCardProps {
   question: Question;
@@ -39,7 +61,21 @@ export default function QuestionCard({
         )}
       </div>
 
-      <p className="text-lg font-medium leading-relaxed mb-5">{question.prompt}</p>
+      <p className="text-lg font-medium leading-relaxed mb-5 whitespace-pre-line">
+        {question.prompt}
+      </p>
+
+      {question.images && question.images.length > 0 && (
+        <div className="mb-5 flex flex-col gap-3">
+          {question.images.map((img, i) => (
+            <ExamImage
+              key={img.src}
+              image={img}
+              alt={`Exhibit ${i + 1} for this question`}
+            />
+          ))}
+        </div>
+      )}
 
       <div className="flex flex-col gap-2">
         {question.choices.map((choice) => {
@@ -113,6 +149,18 @@ export default function QuestionCard({
             {isCorrectOverall ? "Correct" : "Not quite"}
           </p>
           <p className="text-black/80 dark:text-white/80">{question.explanation}</p>
+
+          {question.answerImage && (
+            <div className="mt-3">
+              <p className="mb-1.5 text-xs font-medium uppercase tracking-wide text-black/50 dark:text-white/50">
+                Answer key from the source
+              </p>
+              <ExamImage
+                image={question.answerImage}
+                alt="The exam's answer area with the correct options marked"
+              />
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -20,12 +20,26 @@ import ResultsView from "@/components/ResultsView";
 
 type Mode = "practice" | "exam";
 type Stage = "setup" | "running" | "results";
+type Order = "source" | "shuffled";
 
 const SECONDS_PER_QUESTION = 90;
 
-function buildSessionQuestions(exam: Exam, count: number): Question[] {
-  const picked = shuffle(exam.questions).slice(0, count);
-  return picked.map((q) => ({ ...q, choices: shuffle(q.choices) }));
+function buildSessionQuestions(
+  exam: Exam,
+  count: number,
+  order: Order,
+  startAt: number,
+): Question[] {
+  // In source order, take a contiguous run so questions that share a case
+  // study (or otherwise build on each other) stay together and in sequence.
+  const picked =
+    order === "shuffled"
+      ? shuffle(exam.questions).slice(0, count)
+      : exam.questions.slice(startAt - 1, startAt - 1 + count);
+  return picked.map((q) => ({
+    ...q,
+    choices: q.keepChoiceOrder ? q.choices : shuffle(q.choices),
+  }));
 }
 
 function formatTime(totalSeconds: number): string {
@@ -39,6 +53,8 @@ export default function ExamRunner({ exam }: { exam: Exam }) {
   const [stage, setStage] = useState<Stage>("setup");
   const [mode, setMode] = useState<Mode>("practice");
   const [count, setCount] = useState(Math.min(10, exam.questions.length));
+  const [order, setOrder] = useState<Order>("source");
+  const [startAt, setStartAt] = useState(1);
 
   const [questions, setQuestions] = useState<Question[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -64,8 +80,11 @@ export default function ExamRunner({ exam }: { exam: Exam }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stage, mode, secondsLeft]);
 
+  const maxStart = Math.max(1, maxCount - count + 1);
+  const effectiveStart = Math.min(startAt, maxStart);
+
   function start() {
-    const session = buildSessionQuestions(exam, count);
+    const session = buildSessionQuestions(exam, count, order, effectiveStart);
     setQuestions(session);
     setAnswers({});
     setChecked({});
@@ -183,6 +202,64 @@ export default function ExamRunner({ exam }: { exam: Exam }) {
               </button>
             ))}
           </div>
+        </div>
+
+        <div className="mb-8">
+          <p className="text-sm font-medium mb-2">Order</p>
+          <div className="flex flex-wrap gap-2">
+            <button
+              onClick={() => setOrder("source")}
+              className={`rounded-lg border px-3 py-2 text-sm transition-[colors,transform] active:scale-[0.97] ${
+                order === "source"
+                  ? "border-accent bg-accent-soft dark:bg-accent/10"
+                  : "border-black/10 dark:border-white/15 hover:border-black/30"
+              }`}
+            >
+              In order
+            </button>
+            <button
+              onClick={() => setOrder("shuffled")}
+              className={`rounded-lg border px-3 py-2 text-sm transition-[colors,transform] active:scale-[0.97] ${
+                order === "shuffled"
+                  ? "border-accent bg-accent-soft dark:bg-accent/10"
+                  : "border-black/10 dark:border-white/15 hover:border-black/30"
+              }`}
+            >
+              Shuffled
+            </button>
+          </div>
+          {order === "source" ? (
+            count < maxCount ? (
+              <label className="mt-3 flex items-center gap-2 text-sm text-black/60 dark:text-white/60">
+                Start at question
+                <input
+                  type="number"
+                  inputMode="numeric"
+                  min={1}
+                  max={maxStart}
+                  value={effectiveStart}
+                  onChange={(e) => {
+                    const n = Number(e.target.value);
+                    if (n >= 1 && n <= maxStart) setStartAt(n);
+                  }}
+                  className="w-20 rounded border border-black/15 dark:border-white/20 bg-transparent px-2 py-1 text-center"
+                />
+                <span className="text-black/40 dark:text-white/40">
+                  of {maxCount} — you&apos;ll get {effectiveStart}–
+                  {effectiveStart + count - 1}
+                </span>
+              </label>
+            ) : (
+              <p className="mt-3 text-xs text-black/40 dark:text-white/40">
+                Questions stay in their original exam order, so related ones
+                (like case study follow-ups) stay together.
+              </p>
+            )
+          ) : (
+            <p className="mt-3 text-xs text-black/40 dark:text-white/40">
+              Questions are drawn at random, so related ones may be separated.
+            </p>
+          )}
         </div>
 
         <button
