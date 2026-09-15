@@ -8,7 +8,12 @@ Agent Developer Associate (AI-103)**, **Azure Administrator Associate
 
 - **Practice mode** — instant per-question feedback with explanations.
 - **Exam simulation mode** — timed, no feedback until you finish.
-- Single- and multi-answer questions.
+- Single- and multi-answer questions, with the exam's own artwork for
+  HOTSPOT/drag-and-drop questions: the answer area is shown with the
+  question, and the source's answer key only after you check your answer.
+- Questions run in the exam's own order by default (so case-study
+  follow-ups stay together), starting wherever you like in the bank —
+  or shuffled, if you prefer.
 - Results screen with a topic-by-topic breakdown and full answer review.
 - Attempt history saved to `localStorage` (no account/backend required).
 - Built to support any number of exams — add a new one without touching the UI.
@@ -35,12 +40,17 @@ grading, and an optional `topic` used for the results breakdown.
 
 ## Content status
 
-- **Azure AI App and Agent Developer Associate (AI-103)**: 178 questions,
-  converted from a community exam-question archive (ExamTopics) and
-  re-explained against real Azure/Microsoft Foundry product behavior.
-  HOTSPOT and drag-and-drop source questions were converted into this
-  app's single/multi-select format, which sometimes splits one source
-  question into several entries (ids like `ai103-6-a`, `ai103-6-b`).
+- **Azure AI App and Agent Developer Associate (AI-103)**: all 135
+  source questions, numbered and ordered exactly as the source, converted
+  from a community exam-question archive (ExamTopics) and re-explained
+  against real Azure/Microsoft Foundry product behavior. HOTSPOT and
+  drag-and-drop questions keep the exam's artwork (see `public/exam-images/`)
+  and present their dropdowns/targets as one grouped multi-select, so each
+  source question stays a single question. Two questions (`ai103-86` and
+  `ai103-112`) had no answer key at all in the source, so their answers are
+  reasoned rather than sourced; their explanations say so. One
+  (`ai103-133`) is graded against documented Azure behavior rather than the
+  source's key, which is wrong — its explanation calls that out.
   **Note:** this content is sourced from leaked/community exam dumps,
   which typically violates the Microsoft certification agreement's
   content-sharing terms — keep this private and don't redistribute it.
